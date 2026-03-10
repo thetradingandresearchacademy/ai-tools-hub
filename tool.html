@@ -1,1 +1,24 @@
+<div id="app"></div>
 
+<script>
+
+const params=new URLSearchParams(window.location.search)
+
+const slug=params.get("tool")
+
+fetch("/data/tools.json")
+.then(r=>r.json())
+.then(tools=>{
+
+const tool=tools.find(t=>t.slug===slug)
+
+document.getElementById("app").innerHTML=`
+<iframe
+src="${tool.url}"
+style="width:100%;height:100vh;border:none;">
+</iframe>
+`
+
+})
+
+</script>
