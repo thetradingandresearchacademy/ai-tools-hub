@@ -1,12 +1,57 @@
 [
- {
-  "slug":"scanner",
-  "name":"Pre Market Scanner",
-  "url":"https://pre-market-scanner.vercel.app/"
- },
- {
-  "slug":"chart-ai",
-  "name":"AI Chart Analyzer",
-  "url":"https://your-hf-space.hf.space"
- }
+{
+"name":"Pre-Open Scanner",
+"slug":"premarket",
+"url":"https://tradingandresearchacademy.com/premarket/"
+},
+{
+"name":"IPO Lens",
+"slug":"ipolens",
+"url":"https://tradingandresearchacademy.com/ipolens/"
+},
+{
+"name":"Swing Stock Scanner",
+"slug":"swingstockscan",
+"url":"https://tradingandresearchacademy.com/trading-tools/swingstockscan/"
+},
+{
+"name":"ETF Radar",
+"slug":"etfradar",
+"url":"https://tradingandresearchacademy.com/etfradar/"
+},
+{
+"name":"Trending OI Analyzer",
+"slug":"trendingoi",
+"url":"https://tradingandresearchacademy.com/trendingoi2/"
+},
+{
+"name":"Swing Method",
+"slug":"swingmethod",
+"url":"https://tradingandresearchacademy.com/swingmethod/"
+},
+{
+"name":"Commodity Forex Crypto Engine",
+"slug":"cfcradar",
+"url":"https://tradingandresearchacademy.com/cfcradar/"
+},
+{
+"name":"F&O Radar",
+"slug":"fnoradar",
+"url":"https://tradingandresearchacademy.com/fnoradar/"
+},
+{
+"name":"1% Magical RoadMap",
+"slug":"magical1roadmap",
+"url":"https://tradingandresearchacademy.com/magical1roadmap/"
+},
+{
+"name":"Trader's Master Key",
+"slug":"tradersmasterkey",
+"url":"https://tradingandresearchacademy.com/tradersmasterkey/"
+},
+{
+"name":"TARA Market Pulse",
+"slug":"tarapulse",
+"url":"https://scanner.tradingandresearchacademy.com/"
+}
 ]
