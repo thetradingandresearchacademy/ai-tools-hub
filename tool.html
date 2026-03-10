@@ -1,10 +1,56 @@
-<div id="app">Loading tool...</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI Tool</title>
+
+<style>
+body{
+margin:0;
+font-family:system-ui;
+background:#0f0f0f;
+color:#fff;
+}
+
+#loader{
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-size:18px;
+opacity:.8;
+}
+
+iframe{
+width:100%;
+height:100vh;
+border:none;
+background:#fff;
+}
+</style>
+
+</head>
+
+<body>
+
+<div id="loader">Loading tool...</div>
+<div id="app"></div>
 
 <script type="module">
 
-import { supabase } from "./supabaseClient.js"
+import { createClient } from "https://esm.sh/@supabase/supabase-js"
+
+const SUPABASE_URL = "YOUR_SUPABASE_URL"
+const SUPABASE_KEY = "YOUR_SUPABASE_ANON_KEY"
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
 async function init(){
+
+/* -----------------------------
+AUTHENTICATION CHECK
+----------------------------- */
 
 const { data } = await supabase.auth.getSession()
 
@@ -13,28 +59,91 @@ window.location="/login.html"
 return
 }
 
+
+/* -----------------------------
+GET TOOL SLUG
+----------------------------- */
+
 const params = new URLSearchParams(window.location.search)
 const slug = params.get("tool")
 
-const res = await fetch("/data/tools.json")
-const tools = await res.json()
-
-const tool = tools.find(t => t.slug === slug)
-
-if(!tool){
-document.getElementById("app").innerHTML="Tool not found"
+if(!slug){
+showError("No tool specified")
 return
 }
 
+
+/* -----------------------------
+LOAD TOOLS LIST
+----------------------------- */
+
+let tools
+
+try{
+
+const res = await fetch("/data/tools.json")
+
+tools = await res.json()
+
+}catch(e){
+
+showError("Tools registry failed to load")
+return
+
+}
+
+
+/* -----------------------------
+FIND TOOL
+----------------------------- */
+
+const tool = tools.find(t => t.slug === slug)
+
+if(!tool || tool.allowed === false){
+showError("Tool not available")
+return
+}
+
+
+/* -----------------------------
+RENDER TOOL
+----------------------------- */
+
+document.title = tool.name
+
+document.getElementById("loader").style.display="none"
+
 document.getElementById("app").innerHTML = `
+
 <iframe
 src="${tool.url}"
-style="width:100%;height:100vh;border:none;">
+sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+loading="lazy">
 </iframe>
+
 `
 
 }
 
+
+/* -----------------------------
+ERROR HANDLER
+----------------------------- */
+
+function showError(message){
+
+document.getElementById("loader").innerHTML = message
+
+}
+
+
+/* -----------------------------
+START APP
+----------------------------- */
+
 init()
 
 </script>
+
+</body>
+</html>
