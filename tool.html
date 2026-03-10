@@ -1,24 +1,40 @@
-<div id="app"></div>
+<div id="app">Loading tool...</div>
 
-<script>
+<script type="module">
 
-const params=new URLSearchParams(window.location.search)
+import { supabase } from "./supabaseClient.js"
 
-const slug=params.get("tool")
+async function init(){
 
-fetch("/data/tools.json")
-.then(r=>r.json())
-.then(tools=>{
+const { data } = await supabase.auth.getSession()
 
-const tool=tools.find(t=>t.slug===slug)
+if(!data.session){
+window.location="/login.html"
+return
+}
 
-document.getElementById("app").innerHTML=`
+const params = new URLSearchParams(window.location.search)
+const slug = params.get("tool")
+
+const res = await fetch("/data/tools.json")
+const tools = await res.json()
+
+const tool = tools.find(t => t.slug === slug)
+
+if(!tool){
+document.getElementById("app").innerHTML="Tool not found"
+return
+}
+
+document.getElementById("app").innerHTML = `
 <iframe
 src="${tool.url}"
 style="width:100%;height:100vh;border:none;">
 </iframe>
 `
 
-})
+}
+
+init()
 
 </script>
