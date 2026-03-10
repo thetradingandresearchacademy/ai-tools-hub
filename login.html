@@ -1,1 +1,29 @@
+<input id="email" placeholder="Email">
+<input id="password" type="password">
 
+<button onclick="login()">Login</button>
+
+<script type="module">
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+
+const supabase=createClient(
+"SUPABASE_URL",
+"SUPABASE_ANON_KEY"
+)
+
+async function login(){
+
+const email=document.getElementById("email").value
+const password=document.getElementById("password").value
+
+await supabase.auth.signInWithPassword({
+email,
+password
+})
+
+window.location="/dashboard.html"
+
+}
+
+</script>
