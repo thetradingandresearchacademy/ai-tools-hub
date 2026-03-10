@@ -2,56 +2,78 @@
 {
 "name":"Pre-Open Scanner",
 "slug":"premarket",
-"url":"https://tradingandresearchacademy.com/premarket/"
+"url":"https://tradingandresearchacademy.com/premarket/",
+"image":"https://images.unsplash.com/photo-1642543348745-77f5c6a3a7e4",
+"description":"Scan pre-market momentum and discover early opportunities."
 },
 {
 "name":"IPO Lens",
 "slug":"ipolens",
-"url":"https://tradingandresearchacademy.com/ipolens/"
+"url":"https://tradingandresearchacademy.com/ipolens/",
+"image":"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3",
+"description":"Analyze IPO opportunities with structured insights."
 },
 {
 "name":"Swing Stock Scanner",
 "slug":"swingstockscan",
-"url":"https://tradingandresearchacademy.com/trading-tools/swingstockscan/"
+"url":"https://tradingandresearchacademy.com/trading-tools/swingstockscan/",
+"image":"https://images.unsplash.com/photo-1559526324-593bc073d938",
+"description":"Find high probability swing trading setups."
 },
 {
 "name":"ETF Radar",
 "slug":"etfradar",
-"url":"https://tradingandresearchacademy.com/etfradar/"
+"url":"https://tradingandresearchacademy.com/etfradar/",
+"image":"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3",
+"description":"Track ETF momentum and sector rotation."
 },
 {
 "name":"Trending OI Analyzer",
 "slug":"trendingoi",
-"url":"https://tradingandresearchacademy.com/trendingoi2/"
+"url":"https://tradingandresearchacademy.com/trendingoi2/",
+"image":"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3",
+"description":"Identify options activity and smart money flows."
 },
 {
 "name":"Swing Method",
 "slug":"swingmethod",
-"url":"https://tradingandresearchacademy.com/swingmethod/"
+"url":"https://tradingandresearchacademy.com/swingmethod/",
+"image":"https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f",
+"description":"Complete swing trading methodology."
 },
 {
 "name":"Commodity Forex Crypto Engine",
 "slug":"cfcradar",
-"url":"https://tradingandresearchacademy.com/cfcradar/"
+"url":"https://tradingandresearchacademy.com/cfcradar/",
+"image":"https://images.unsplash.com/photo-1621761191319-c6fb62004040",
+"description":"Analyze commodities, forex and crypto markets."
 },
 {
 "name":"F&O Radar",
 "slug":"fnoradar",
-"url":"https://tradingandresearchacademy.com/fnoradar/"
+"url":"https://tradingandresearchacademy.com/fnoradar/",
+"image":"https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3",
+"description":"Advanced futures & options market scanner."
 },
 {
 "name":"1% Magical RoadMap",
 "slug":"magical1roadmap",
-"url":"https://tradingandresearchacademy.com/magical1roadmap/"
+"url":"https://tradingandresearchacademy.com/magical1roadmap/",
+"image":"https://images.unsplash.com/photo-1518186233392-c232efbf2373",
+"description":"Structured roadmap to consistent trading growth."
 },
 {
 "name":"Trader's Master Key",
 "slug":"tradersmasterkey",
-"url":"https://tradingandresearchacademy.com/tradersmasterkey/"
+"url":"https://tradingandresearchacademy.com/tradersmasterkey/",
+"image":"https://images.unsplash.com/photo-1518600506278-4e8ef466b810",
+"description":"Strategic trading framework and decision system."
 },
 {
 "name":"TARA Market Pulse",
 "slug":"tarapulse",
-"url":"https://scanner.tradingandresearchacademy.com/"
+"url":"https://scanner.tradingandresearchacademy.com/",
+"image":"https://images.unsplash.com/photo-1569025690938-a00729c9e1df",
+"description":"Live market scanner and intelligence dashboard."
 }
 ]
