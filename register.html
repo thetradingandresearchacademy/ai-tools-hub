@@ -1,7 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Register</title>
+
+<style>
+body{
+font-family:system-ui;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+background:#0f0f0f;
+color:#fff;
+}
+
+.container{
+width:320px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+input{
+padding:10px;
+border:none;
+border-radius:6px;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:6px;
+background:#4CAF50;
+color:white;
+cursor:pointer;
+}
+
+button:disabled{
+opacity:0.6;
+cursor:not-allowed;
+}
+
+#msg{
+font-size:14px;
+opacity:.9;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Create Account</h2>
+
 <input id="email" placeholder="Email">
+
 <input id="password" type="password" placeholder="Password">
 
-<button onclick="register()">Register</button>
+<button id="registerBtn">Register</button>
+
+<div id="msg"></div>
+
+</div>
 
 <script type="module">
 
@@ -12,15 +75,43 @@ const supabase = createClient(
 "SUPABASE_ANON_KEY"
 )
 
+const btn=document.getElementById("registerBtn")
+const msg=document.getElementById("msg")
+
+btn.addEventListener("click",register)
+
 async function register(){
 
-const email=document.getElementById("email").value
-const password=document.getElementById("password").value
+const email=document.getElementById("email").value.trim()
+const password=document.getElementById("password").value.trim()
 
-await supabase.auth.signUp({ email,password })
+if(!email || !password){
+msg.innerText="Please enter email and password"
+return
+}
 
-alert("Check email for confirmation")
+btn.disabled=true
+msg.innerText="Creating account..."
+
+const { data,error } = await supabase.auth.signUp({
+email,
+password
+})
+
+btn.disabled=false
+
+if(error){
+
+msg.innerText=error.message
+return
+
+}
+
+msg.innerText="Registration successful. Check your email to confirm."
 
 }
 
 </script>
+
+</body>
+</html>
