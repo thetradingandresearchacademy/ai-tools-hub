@@ -1,1 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
 
+<meta charset="UTF-8">
+<title>TARA AI Tools Hub</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Inter,Arial;
+background:#0f1117;
+color:white;
+}
+
+header{
+padding:25px;
+font-size:24px;
+font-weight:600;
+border-bottom:1px solid #222;
+display:flex;
+justify-content:space-between;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:28px;
+padding:40px;
+}
+
+.card{
+
+background:#161b22;
+border-radius:12px;
+overflow:hidden;
+cursor:pointer;
+transition:.25s;
+box-shadow:0 10px 20px rgba(0,0,0,.35);
+
+}
+
+.card:hover{
+
+transform:translateY(-6px);
+box-shadow:0 15px 40px rgba(0,0,0,.5);
+
+}
+
+.card img{
+
+width:100%;
+height:150px;
+object-fit:cover;
+
+}
+
+.card-body{
+
+padding:18px;
+
+}
+
+.card-title{
+
+font-size:17px;
+font-weight:600;
+margin-bottom:8px;
+
+}
+
+.card-desc{
+
+font-size:13px;
+opacity:.7;
+line-height:1.5;
+
+}
+
+.logout{
+
+cursor:pointer;
+font-size:14px;
+opacity:.8;
+
+}
+
+.logout:hover{
+
+opacity:1;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+TARA AI Tools Platform
+
+<span class="logout" id="logout">Logout</span>
+
+</header>
+
+<div class="grid" id="tools"></div>
+
+<script type="module">
+
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
+
+const supabase = createClient(
+"https://lwrqdsqvjfdgrikmjmzi.supabase.co",
+"YOUR_ANON_KEY"
+)
+
+async function init(){
+
+const { data } = await supabase.auth.getSession()
+
+if(!data.session){
+
+window.location="/login.html"
+return
+
+}
+
+const res = await fetch("/data/tools.json")
+const tools = await res.json()
+
+const grid=document.getElementById("tools")
+
+tools.forEach(tool=>{
+
+const card=document.createElement("div")
+
+card.className="card"
+
+card.innerHTML=`
+
+<img src="${tool.image}">
+
+<div class="card-body">
+
+<div class="card-title">${tool.name}</div>
+
+<div class="card-desc">${tool.description}</div>
+
+</div>
+
+`
+
+card.onclick=()=>{
+
+window.location=`/tool.html?tool=${tool.slug}`
+
+}
+
+grid.appendChild(card)
+
+})
+
+}
+
+init()
+
+document.getElementById("logout").onclick=async()=>{
+
+await supabase.auth.signOut()
+
+window.location="/login.html"
+
+}
+
+</script>
+
+</body>
+</html>
