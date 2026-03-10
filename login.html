@@ -1,26 +1,35 @@
 <input id="email" placeholder="Email">
-<input id="password" type="password">
+<input id="password" type="password" placeholder="Password">
 
-<button onclick="login()">Login</button>
+<button id="loginBtn">Login</button>
+
+<p id="msg"></p>
 
 <script type="module">
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
 
-const supabase=createClient(
-"SUPABASE_URL",
-"SUPABASE_ANON_KEY"
+const supabase = createClient(
+"https://lwrqdsqvjfdgrikmjmzi.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3cmdkc3F2amZkZ3Jpa21qbXppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNTgxNzMsImV4cCI6MjA4NjYzNDE3M30.hYvtNelvAlsq0oDdL_x64mDq1RYaje_0njQCaG0bc7U"
 )
+
+document.getElementById("loginBtn").addEventListener("click",login)
 
 async function login(){
 
 const email=document.getElementById("email").value
 const password=document.getElementById("password").value
 
-await supabase.auth.signInWithPassword({
-email,
-password
+const { error } = await supabase.auth.signInWithPassword({
+email:email,
+password:password
 })
+
+if(error){
+document.getElementById("msg").innerText=error.message
+return
+}
 
 window.location="/dashboard.html"
 
