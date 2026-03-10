@@ -1,1 +1,12 @@
-
+[
+ {
+  "slug":"scanner",
+  "name":"Pre Market Scanner",
+  "url":"https://pre-market-scanner.vercel.app/"
+ },
+ {
+  "slug":"chart-ai",
+  "name":"AI Chart Analyzer",
+  "url":"https://your-hf-space.hf.space"
+ }
+]
