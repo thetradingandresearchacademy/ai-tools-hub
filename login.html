@@ -1,38 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="UTF-8">
+<title>TARA AI Tools – Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Inter,Arial;
+}
+
+body{
+
+margin:0;
+height:100vh;
+
+background:linear-gradient(135deg,#0f172a,#020617);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+
+}
+
+.container{
+
+width:380px;
+padding:40px;
+
+background:#111827;
+
+border-radius:12px;
+
+box-shadow:0 20px 50px rgba(0,0,0,.5);
+
+}
+
+.logo{
+
+text-align:center;
+font-size:22px;
+font-weight:600;
+margin-bottom:30px;
+
+}
+
+input{
+
+width:100%;
+padding:14px;
+
+margin-bottom:16px;
+
+border:none;
+border-radius:6px;
+
+background:#1f2937;
+color:white;
+
+font-size:14px;
+
+}
+
+input:focus{
+
+outline:none;
+background:#374151;
+
+}
+
+button{
+
+width:100%;
+padding:14px;
+
+border:none;
+border-radius:6px;
+
+background:#4f46e5;
+color:white;
+
+font-weight:600;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+button:hover{
+
+background:#6366f1;
+
+}
+
+.msg{
+
+margin-top:14px;
+font-size:13px;
+opacity:.8;
+
+}
+
+.footer{
+
+text-align:center;
+margin-top:20px;
+font-size:13px;
+opacity:.6;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="logo">
+
+TARA AI Tools
+
+</div>
+
 <input id="email" placeholder="Email">
+
 <input id="password" type="password" placeholder="Password">
 
 <button id="loginBtn">Login</button>
 
-<p id="msg"></p>
+<div class="msg" id="msg"></div>
+
+<div class="footer">
+
+Trading & Research Academy
+
+</div>
+
+</div>
 
 <script type="module">
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
 
 const supabase = createClient(
-"https://lwrgdsqvjfdgrikmjmzi.supabase.co",
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3cmdkc3F2amZkZ3Jpa21qbXppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNTgxNzMsImV4cCI6MjA4NjYzNDE3M30.hYvtNelvAlsq0oDdL_x64mDq1RYaje_0njQCaG0bc7U"
+"https://lwrqdsqvjfdgrikmjmzi.supabase.co",
+"YOUR_ANON_KEY"
 )
 
-document.getElementById("loginBtn").addEventListener("click",login)
-
-async function login(){
+document.getElementById("loginBtn").onclick = async () => {
 
 const email=document.getElementById("email").value
 const password=document.getElementById("password").value
 
 const { error } = await supabase.auth.signInWithPassword({
-email:email,
-password:password
+
+email,
+password
+
 })
 
 if(error){
+
 document.getElementById("msg").innerText=error.message
 return
+
 }
 
-window.location="/dashboard.html"
+window.location="/index.html"
 
 }
 
 </script>
+
+</body>
+</html>
