@@ -34,17 +34,17 @@ color:white;
 
 }
 
-/* glass card */
+/* card */
 
 .card{
 
-width:420px;
+width:460px;
 padding:45px;
 
 border-radius:14px;
 
-background:rgba(17,24,39,.8);
-backdrop-filter:blur(12px);
+background:rgba(17,24,39,.85);
+backdrop-filter:blur(14px);
 
 box-shadow:
 0 25px 60px rgba(0,0,0,.6),
@@ -55,28 +55,22 @@ box-shadow:
 /* logo */
 
 .logo{
-
 display:flex;
 justify-content:center;
 margin-bottom:15px;
-
 }
 
 .logo img{
-
-width:70px;
-
+width:80px;
 }
 
 /* title */
 
 .title{
-
 text-align:center;
-font-size:24px;
+font-size:30px;
 font-weight:600;
 margin-bottom:30px;
-
 }
 
 /* inputs */
@@ -84,7 +78,7 @@ margin-bottom:30px;
 input{
 
 width:100%;
-padding:15px;
+padding:18px;
 
 margin-bottom:18px;
 
@@ -94,17 +88,15 @@ border-radius:8px;
 background:#1f2937;
 color:white;
 
-font-size:14px;
+font-size:16px;
 
 transition:.2s;
 
 }
 
 input:focus{
-
 outline:none;
 background:#374151;
-
 }
 
 /* button */
@@ -112,7 +104,7 @@ background:#374151;
 button{
 
 width:100%;
-padding:15px;
+padding:18px;
 
 border:none;
 border-radius:8px;
@@ -121,9 +113,9 @@ background:linear-gradient(90deg,#4f46e5,#6366f1);
 
 color:white;
 font-weight:600;
+font-size:16px;
 
 cursor:pointer;
-
 transition:.2s;
 
 }
@@ -142,7 +134,7 @@ box-shadow:0 6px 18px rgba(99,102,241,.5);
 display:flex;
 justify-content:space-between;
 margin-top:16px;
-font-size:13px;
+font-size:14px;
 
 }
 
@@ -154,20 +146,22 @@ text-decoration:none;
 }
 
 .links a:hover{
-
 text-decoration:underline;
+}
 
+.msg{
+margin-top:14px;
+color:#f87171;
+text-align:center;
 }
 
 /* footer */
 
 .footer{
-
 margin-top:28px;
 text-align:center;
-font-size:12px;
+font-size:13px;
 opacity:.6;
-
 }
 
 </style>
@@ -179,41 +173,30 @@ opacity:.6;
 <div class="card">
 
 <div class="logo">
-
 <img src="/assets/tara-logo.jpg">
-
 </div>
 
 <div class="title">
-
 TARA AI Tools
-
 </div>
 
 <input id="email" placeholder="Email">
 
 <input id="password" type="password" placeholder="Password">
 
-<button id="loginBtn">
-
-Login
-
-</button>
+<button id="loginBtn">Login</button>
 
 <div class="links">
 
 <a href="/register.html">Register</a>
-
 <a href="#" id="forgot">Forgot password?</a>
 
 </div>
 
-<div id="msg"></div>
+<div class="msg" id="msg"></div>
 
 <div class="footer">
-
 Trading & Research Academy
-
 </div>
 
 </div>
@@ -227,14 +210,24 @@ const supabase=createClient(
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx3cmdkc3F2amZkZ3Jpa21qbXppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNTgxNzMsImV4cCI6MjA4NjYzNDE3M30.hYvtNelvAlsq0oDdL_x64mDq1RYaje_0njQCaG0bc7U"
 )
 
+/* auto redirect if logged in */
+
+const { data:session } = await supabase.auth.getSession()
+
+if(session.session){
+window.location="/index.html"
+}
+
 /* login */
 
 document.getElementById("loginBtn").onclick=async()=>{
 
-const email=document.getElementById("email").value
-const password=document.getElementById("password").value
+const email=document.getElementById("email").value.trim()
+const password=document.getElementById("password").value.trim()
 
-const {error}=await supabase.auth.signInWithPassword({
+document.getElementById("msg").innerText=""
+
+const { data,error }=await supabase.auth.signInWithPassword({
 
 email,
 password
@@ -256,16 +249,23 @@ window.location="/index.html"
 
 document.getElementById("forgot").onclick=async()=>{
 
-const email=document.getElementById("email").value
+const email=document.getElementById("email").value.trim()
 
 if(!email){
 
-alert("Enter email first")
+alert("Enter your email first")
 return
 
 }
 
-await supabase.auth.resetPasswordForEmail(email)
+const { error } = await supabase.auth.resetPasswordForEmail(email,{
+redirectTo: window.location.origin + "/login.html"
+})
+
+if(error){
+alert(error.message)
+return
+}
 
 alert("Password reset email sent")
 
