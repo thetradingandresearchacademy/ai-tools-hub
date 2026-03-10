@@ -3,7 +3,7 @@
 <head>
 
 <meta charset="UTF-8">
-<title>TARA AI Tools – Login</title>
+<title>TARA AI Tools</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -19,7 +19,12 @@ body{
 margin:0;
 height:100vh;
 
-background:linear-gradient(135deg,#0f172a,#020617);
+background:
+linear-gradient(rgba(5,10,25,.85),rgba(5,10,25,.92)),
+url("/assets/tools-bg.jpg");
+
+background-size:cover;
+background-position:center;
 
 display:flex;
 align-items:center;
@@ -29,42 +34,69 @@ color:white;
 
 }
 
-.container{
+/* glass card */
 
-width:380px;
-padding:40px;
+.card{
 
-background:#111827;
+width:420px;
+padding:45px;
 
-border-radius:12px;
+border-radius:14px;
 
-box-shadow:0 20px 50px rgba(0,0,0,.5);
+background:rgba(17,24,39,.8);
+backdrop-filter:blur(12px);
+
+box-shadow:
+0 25px 60px rgba(0,0,0,.6),
+0 0 40px rgba(79,70,229,.25);
 
 }
 
+/* logo */
+
 .logo{
 
+display:flex;
+justify-content:center;
+margin-bottom:15px;
+
+}
+
+.logo img{
+
+width:70px;
+
+}
+
+/* title */
+
+.title{
+
 text-align:center;
-font-size:22px;
+font-size:24px;
 font-weight:600;
 margin-bottom:30px;
 
 }
 
+/* inputs */
+
 input{
 
 width:100%;
-padding:14px;
+padding:15px;
 
-margin-bottom:16px;
+margin-bottom:18px;
 
 border:none;
-border-radius:6px;
+border-radius:8px;
 
 background:#1f2937;
 color:white;
 
 font-size:14px;
+
+transition:.2s;
 
 }
 
@@ -75,17 +107,19 @@ background:#374151;
 
 }
 
+/* button */
+
 button{
 
 width:100%;
-padding:14px;
+padding:15px;
 
 border:none;
-border-radius:6px;
+border-radius:8px;
 
-background:#4f46e5;
+background:linear-gradient(90deg,#4f46e5,#6366f1);
+
 color:white;
-
 font-weight:600;
 
 cursor:pointer;
@@ -96,23 +130,42 @@ transition:.2s;
 
 button:hover{
 
-background:#6366f1;
+transform:translateY(-1px);
+box-shadow:0 6px 18px rgba(99,102,241,.5);
 
 }
 
-.msg{
+/* links */
 
-margin-top:14px;
+.links{
+
+display:flex;
+justify-content:space-between;
+margin-top:16px;
 font-size:13px;
-opacity:.8;
 
 }
+
+.links a{
+
+color:#a5b4fc;
+text-decoration:none;
+
+}
+
+.links a:hover{
+
+text-decoration:underline;
+
+}
+
+/* footer */
 
 .footer{
 
+margin-top:28px;
 text-align:center;
-margin-top:20px;
-font-size:13px;
+font-size:12px;
 opacity:.6;
 
 }
@@ -123,9 +176,15 @@ opacity:.6;
 
 <body>
 
-<div class="container">
+<div class="card">
 
 <div class="logo">
+
+<img src="/assets/tara-logo.jpg">
+
+</div>
+
+<div class="title">
 
 TARA AI Tools
 
@@ -135,9 +194,21 @@ TARA AI Tools
 
 <input id="password" type="password" placeholder="Password">
 
-<button id="loginBtn">Login</button>
+<button id="loginBtn">
 
-<div class="msg" id="msg"></div>
+Login
+
+</button>
+
+<div class="links">
+
+<a href="/register.html">Register</a>
+
+<a href="#" id="forgot">Forgot password?</a>
+
+</div>
+
+<div id="msg"></div>
 
 <div class="footer">
 
@@ -151,17 +222,19 @@ Trading & Research Academy
 
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm"
 
-const supabase = createClient(
+const supabase=createClient(
 "https://lwrqdsqvjfdgrikmjmzi.supabase.co",
 "YOUR_ANON_KEY"
 )
 
-document.getElementById("loginBtn").onclick = async () => {
+/* login */
+
+document.getElementById("loginBtn").onclick=async()=>{
 
 const email=document.getElementById("email").value
 const password=document.getElementById("password").value
 
-const { error } = await supabase.auth.signInWithPassword({
+const {error}=await supabase.auth.signInWithPassword({
 
 email,
 password
@@ -176,6 +249,25 @@ return
 }
 
 window.location="/index.html"
+
+}
+
+/* forgot password */
+
+document.getElementById("forgot").onclick=async()=>{
+
+const email=document.getElementById("email").value
+
+if(!email){
+
+alert("Enter email first")
+return
+
+}
+
+await supabase.auth.resetPasswordForEmail(email)
+
+alert("Password reset email sent")
 
 }
 
