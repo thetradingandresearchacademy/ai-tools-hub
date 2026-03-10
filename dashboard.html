@@ -1,1 +1,27 @@
+<h1>AI Trading Tools</h1>
 
+<div id="tools"></div>
+
+<script>
+
+fetch("/data/tools.json")
+.then(r=>r.json())
+.then(tools=>{
+
+const div=document.getElementById("tools")
+
+tools.forEach(tool=>{
+
+div.innerHTML+=`
+<p>
+<a href="tool.html?tool=${tool.slug}">
+${tool.name}
+</a>
+</p>
+`
+
+})
+
+})
+
+</script>
