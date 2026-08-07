@@ -23,8 +23,8 @@
     <div class="auth-container">
         <h2>TARA APEX Terminal</h2>
         <form id="login-form">
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="password" id="password" placeholder="Password" required>
+            <input type="email" id="email" placeholder="Email Address" required autocomplete="email">
+            <input type="password" id="password" placeholder="Password" required autocomplete="current-password">
             <button type="submit">Authenticate</button>
         </form>
         <div id="error-msg"></div>
@@ -34,30 +34,60 @@
         </div>
     </div>
 
-    <script src="/js/config.js"></script>
-    <script src="/js/tara-auth.js"></script>
     <script>
-        // If already logged in, redirect away
-        window.onload = () => TARA.checkExistingSession();
+        // CONFIGURATION - UPDATE YOUR KEYS HERE IF NEEDED
+        const SUPABASE_URL = "https://lwrqdsqvjfdgrikmjmzi.supabase.co"; // Replace with your new Supabase URL if different
+        const SUPABASE_ANON_KEY = "YOUR_NEW_SUPABASE_ANON_KEY_HERE"; // Replace with your actual anon key
+
+        let supabaseClient = null;
+
+        function getClient() {
+            if (!supabaseClient && window.supabase) {
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+            return supabaseClient;
+        }
+
+        // Auto-check if user is already logged in
+        window.addEventListener('load', async () => {
+            const client = getClient();
+            if (client) {
+                const { data: { session } } = await client.auth.getSession();
+                if (session) {
+                    window.location.href = "dashboard.html";
+                }
+            }
+        });
 
         document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const errorDiv = document.getElementById('error-msg');
             
+            const client = getClient();
+            if (!client) {
+                errorDiv.textContent = "Auth client loading... Please click Authenticate again.";
+                return;
+            }
+
             btn.textContent = "Authenticating...";
+            btn.disabled = true;
             errorDiv.textContent = "";
             
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
             try {
-                await TARA.login(
-                    document.getElementById('email').value,
-                    document.getElementById('password').value
-                );
-                // Success handled inside TARA.checkExistingSession logic triggered manually here
-                TARA.checkExistingSession(); 
+                const { data, error } = await client.auth.signInWithPassword({ email, password });
+                if (error) throw error;
+
+                // Success - go to dashboard
+                window.location.href = "dashboard.html";
             } catch (error) {
-                errorDiv.textContent = error.message;
+                errorDiv.textContent = error.message || "Authentication failed.";
+            } finally {
                 btn.textContent = "Authenticate";
+                btn.disabled = false;
             }
         });
     </script>
