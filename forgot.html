@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TARA Identity - Login</title>
+    <title>TARA Identity - Recover Access</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
+        /* Exact same CSS styling as login.html */
         body { background-color: #050A18; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
         .auth-container { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 8px; border: 1px solid #FFD700; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2); }
         h2 { color: #FFD700; text-align: center; margin-bottom: 20px; }
@@ -13,51 +14,46 @@
         input::placeholder { color: rgba(255, 215, 0, 0.5); }
         button { width: 100%; padding: 12px; background: #FFD700; color: #050A18; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
         button:hover { background: #e6c200; }
-        .links { display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.9em; }
+        .links { text-align: center; margin-top: 15px; font-size: 0.9em; }
         a { color: #FFD700; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        #error-msg { color: #ff4d4d; margin-top: 10px; text-align: center; font-size: 0.9em; }
+        #msg { margin-top: 10px; text-align: center; font-size: 0.9em; }
+        .error { color: #ff4d4d; }
+        .success { color: #00e676; }
     </style>
 </head>
 <body>
     <div class="auth-container">
-        <h2>TARA APEX Terminal</h2>
-        <form id="login-form">
-            <input type="email" id="email" placeholder="Email Address" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Authenticate</button>
+        <h2>Recover Access</h2>
+        <form id="forgot-form">
+            <input type="email" id="email" placeholder="Registered Email Address" required>
+            <button type="submit">Send Reset Link</button>
         </form>
-        <div id="error-msg"></div>
+        <div id="msg"></div>
         <div class="links">
-            <a href="register.html">Create Account</a>
-            <a href="forgot.html">Recover Access</a>
+            <a href="login.html">Return to Login</a>
         </div>
     </div>
 
     <script src="/js/config.js"></script>
     <script src="/js/tara-auth.js"></script>
     <script>
-        // If already logged in, redirect away
-        window.onload = () => TARA.checkExistingSession();
-
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
+        document.getElementById('forgot-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
-            const errorDiv = document.getElementById('error-msg');
+            const msgDiv = document.getElementById('msg');
             
-            btn.textContent = "Authenticating...";
-            errorDiv.textContent = "";
+            btn.textContent = "Sending...";
             
             try {
-                await TARA.login(
-                    document.getElementById('email').value,
-                    document.getElementById('password').value
-                );
-                // Success handled inside TARA.checkExistingSession logic triggered manually here
-                TARA.checkExistingSession(); 
+                await TARA.resetPasswordForEmail(document.getElementById('email').value);
+                msgDiv.className = "success";
+                msgDiv.textContent = "Check your email for the recovery link.";
             } catch (error) {
-                errorDiv.textContent = error.message;
-                btn.textContent = "Authenticate";
+                msgDiv.className = "error";
+                msgDiv.textContent = error.message;
+            } finally {
+                btn.textContent = "Send Reset Link";
             }
         });
     </script>
