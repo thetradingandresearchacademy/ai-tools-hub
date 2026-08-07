@@ -2,7 +2,7 @@
 const TARA_CONFIG = {
     // Replace these with your NEW Supabase project details
     SUPABASE_URL: "https://dlqttnqlnzcprqxuovte.supabase.co",
-    SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRscXR0bnFsbnpjcHJxeHVvdnRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODYxMDIzMTgsImV4cCI6MjEwMTY3ODMxOH0.qpFIfkChfrJvdu7FEfPs_AlR7JqwVvY2YKuavY3x4bU",
+    SUPABASE_ANON_KEY: "sb_publishable_nBOtx-lTx94ts2IsdSRQiw_1ktIWKcg",
     
     // Routing definitions
     LOGIN_URL: "/login.html",
