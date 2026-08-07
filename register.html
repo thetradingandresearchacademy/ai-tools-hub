@@ -4,82 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TARA Identity - Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { 
-            background-color: #050A18; 
-            color: #ffffff; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-        }
-        .auth-container { 
-            background: rgba(255, 255, 255, 0.05); 
-            padding: 40px; 
-            border-radius: 8px; 
-            border: 1px solid #FFD700; 
-            width: 100%; 
-            max-width: 400px; 
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2); 
-        }
-        h2 { 
-            color: #FFD700; 
-            text-align: center; 
-            margin-bottom: 20px; 
-        }
-        input { 
-            width: 100%; 
-            padding: 10px; 
-            margin: 10px 0; 
-            background: #050A18; 
-            border: 1px solid #FFD700; 
-            color: #FFD700; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-        }
-        input::placeholder { 
-            color: rgba(255, 215, 0, 0.5); 
-        }
-        button { 
-            width: 100%; 
-            padding: 12px; 
-            background: #FFD700; 
-            color: #050A18; 
-            border: none; 
-            border-radius: 4px; 
-            font-weight: bold; 
-            cursor: pointer; 
-            margin-top: 10px; 
-            transition: background 0.3s; 
-        }
-        button:hover { 
-            background: #e6c200; 
-        }
-        .links { 
-            text-align: center; 
-            margin-top: 15px; 
-            font-size: 0.9em; 
-        }
-        a { 
-            color: #FFD700; 
-            text-decoration: none; 
-        }
-        a:hover { 
-            text-decoration: underline; 
-        }
-        #msg { 
-            margin-top: 10px; 
-            text-align: center; 
-            font-size: 0.9em; 
-        }
-        .error { 
-            color: #ff4d4d; 
-        }
-        .success { 
-            color: #00e676; 
-        }
+        body { background-color: #050A18; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .auth-container { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 8px; border: 1px solid #FFD700; width: 100%; max-width: 400px; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2); }
+        h2 { color: #FFD700; text-align: center; margin-bottom: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; background: #050A18; border: 1px solid #FFD700; color: #FFD700; border-radius: 4px; box-sizing: border-box; }
+        input::placeholder { color: rgba(255, 215, 0, 0.5); }
+        button { width: 100%; padding: 12px; background: #FFD700; color: #050A18; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
+        button:hover { background: #e6c200; }
+        .links { text-align: center; margin-top: 15px; font-size: 0.9em; }
+        a { color: #FFD700; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        #msg { margin-top: 10px; text-align: center; font-size: 0.9em; }
+        .error { color: #ff4d4d; }
+        .success { color: #00e676; }
     </style>
 </head>
 <body>
@@ -96,21 +35,31 @@
         </div>
     </div>
 
-    <!-- Core Scripts loaded synchronously in strict execution order -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="/js/config.js"></script>
-    <script src="/js/tara-auth.js"></script>
-    
     <script>
+        // CONFIGURATION - UPDATE YOUR KEYS HERE IF NEEDED
+        const SUPABASE_URL = "https://lwrqdsqvjfdgrikmjmzi.supabase.co"; // Replace with your new Supabase URL if different
+        const SUPABASE_ANON_KEY = "YOUR_NEW_SUPABASE_ANON_KEY_HERE"; // Replace with your actual anon key
+
+        let supabaseClient = null;
+
+        function getClient() {
+            if (!supabaseClient) {
+                if (window.supabase) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                }
+            }
+            return supabaseClient;
+        }
+
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const msgDiv = document.getElementById('msg');
             
-            // Safety check to ensure SDK initialized
-            if (typeof TARA === 'undefined') {
+            const client = getClient();
+            if (!client) {
                 msgDiv.className = "error";
-                msgDiv.textContent = "Authentication system initializing. Please refresh and try again.";
+                msgDiv.textContent = "Connecting to auth server... Please retry in 2 seconds.";
                 return;
             }
 
@@ -119,17 +68,19 @@
             msgDiv.className = "";
             msgDiv.textContent = "";
             
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
             try {
-                await TARA.register(
-                    document.getElementById('email').value,
-                    document.getElementById('password').value
-                );
+                const { data, error } = await client.auth.signUp({ email, password });
+                if (error) throw error;
+
                 msgDiv.className = "success";
-                msgDiv.textContent = "Account established. Please check your email to verify your account before logging in.";
+                msgDiv.textContent = "Account established! Check your email inbox to verify your account.";
                 e.target.reset();
             } catch (error) {
                 msgDiv.className = "error";
-                msgDiv.textContent = error.message || "Failed to establish account.";
+                msgDiv.textContent = error.message || "Registration failed.";
             } finally {
                 btn.textContent = "Establish Account";
                 btn.disabled = false;
