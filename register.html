@@ -16,7 +16,7 @@
         .links { text-align: center; margin-top: 15px; font-size: 0.9em; }
         a { color: #FFD700; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        #msg { margin-top: 10px; text-align: center; font-size: 0.9em; }
+        #msg { margin-top: 10px; text-align: center; font-size: 0.9em; line-height: 1.4; }
         .error { color: #ff4d4d; }
         .success { color: #00e676; }
     </style>
@@ -35,49 +35,52 @@
         </div>
     </div>
 
+    <!-- External Configuration File -->
+    <script src="/js/config.js"></script>
+    
     <script>
-        // CONFIGURATION - UPDATE YOUR KEYS HERE IF NEEDED
-        const SUPABASE_URL = "https://lwrqdsqvjfdgrikmjmzi.supabase.co"; // Replace with your new Supabase URL if different
-        const SUPABASE_ANON_KEY = "YOUR_NEW_SUPABASE_ANON_KEY_HERE"; // Replace with your actual anon key
-
-        let supabaseClient = null;
-
-        function getClient() {
-            if (!supabaseClient) {
-                if (window.supabase) {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                }
-            }
-            return supabaseClient;
-        }
+        const supabase = window.supabase.createClient(
+            TARA_CONFIG.SUPABASE_URL, 
+            TARA_CONFIG.SUPABASE_ANON_KEY
+        );
 
         document.getElementById('register-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button');
             const msgDiv = document.getElementById('msg');
             
-            const client = getClient();
-            if (!client) {
-                msgDiv.className = "error";
-                msgDiv.textContent = "Connecting to auth server... Please retry in 2 seconds.";
-                return;
-            }
-
             btn.textContent = "Processing...";
             btn.disabled = true;
             msgDiv.className = "";
             msgDiv.textContent = "";
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
             try {
-                const { data, error } = await client.auth.signUp({ email, password });
+                const { data, error } = await supabase.auth.signUp({ 
+                    email, 
+                    password,
+                    options: {
+                        emailRedirectTo: 'https://login.tradingandresearchacademy.com/login.html'
+                    }
+                });
+
                 if (error) throw error;
 
-                msgDiv.className = "success";
-                msgDiv.textContent = "Account established! Check your email inbox to verify your account.";
-                e.target.reset();
+                // Check if user needs email verification
+                if (data.user && data.user.identities && data.user.identities.length === 0) {
+                    msgDiv.className = "error";
+                    msgDiv.textContent = "An account with this email already exists.";
+                } else if (data.session === null) {
+                    msgDiv.className = "success";
+                    msgDiv.textContent = "Registration successful! A verification email has been sent. Please check your inbox and verify before logging in.";
+                    e.target.reset();
+                } else {
+                    msgDiv.className = "success";
+                    msgDiv.textContent = "Account created and verified! Redirecting to login...";
+                    setTimeout(() => window.location.href = "login.html", 2000);
+                }
             } catch (error) {
                 msgDiv.className = "error";
                 msgDiv.textContent = error.message || "Registration failed.";
