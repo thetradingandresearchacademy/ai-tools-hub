@@ -16,7 +16,7 @@
         .links { display: flex; justify-content: space-between; margin-top: 15px; font-size: 0.9em; }
         a { color: #FFD700; text-decoration: none; }
         a:hover { text-decoration: underline; }
-        #error-msg { color: #ff4d4d; margin-top: 10px; text-align: center; font-size: 0.9em; }
+        #error-msg { color: #ff4d4d; margin-top: 10px; text-align: center; font-size: 0.9em; line-height: 1.4; }
     </style>
 </head>
 <body>
@@ -34,28 +34,20 @@
         </div>
     </div>
 
+    <!-- External Configuration File -->
+    <script src="/js/config.js"></script>
+
     <script>
-        // CONFIGURATION - UPDATE YOUR KEYS HERE IF NEEDED
-        const SUPABASE_URL = "https://lwrqdsqvjfdgrikmjmzi.supabase.co"; // Replace with your new Supabase URL if different
-        const SUPABASE_ANON_KEY = "YOUR_NEW_SUPABASE_ANON_KEY_HERE"; // Replace with your actual anon key
+        const supabase = window.supabase.createClient(
+            TARA_CONFIG.SUPABASE_URL, 
+            TARA_CONFIG.SUPABASE_ANON_KEY
+        );
 
-        let supabaseClient = null;
-
-        function getClient() {
-            if (!supabaseClient && window.supabase) {
-                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-            return supabaseClient;
-        }
-
-        // Auto-check if user is already logged in
+        // Check if returning from email verification link
         window.addEventListener('load', async () => {
-            const client = getClient();
-            if (client) {
-                const { data: { session } } = await client.auth.getSession();
-                if (session) {
-                    window.location.href = "dashboard.html";
-                }
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) {
+                window.location.href = "dashboard.html";
             }
         });
 
@@ -64,24 +56,23 @@
             const btn = e.target.querySelector('button');
             const errorDiv = document.getElementById('error-msg');
             
-            const client = getClient();
-            if (!client) {
-                errorDiv.textContent = "Auth client loading... Please click Authenticate again.";
-                return;
-            }
-
             btn.textContent = "Authenticating...";
             btn.disabled = true;
             errorDiv.textContent = "";
             
-            const email = document.getElementById('email').value;
+            const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
             try {
-                const { data, error } = await client.auth.signInWithPassword({ email, password });
-                if (error) throw error;
+                const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                
+                if (error) {
+                    if (error.message.includes("Email not confirmed")) {
+                        throw new Error("Please verify your email address before logging in. Check your inbox.");
+                    }
+                    throw error;
+                }
 
-                // Success - go to dashboard
                 window.location.href = "dashboard.html";
             } catch (error) {
                 errorDiv.textContent = error.message || "Authentication failed.";
