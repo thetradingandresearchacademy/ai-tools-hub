@@ -1,0 +1,31 @@
+Part 1: How to Add, Edit, or Manage Tools (The Plug-and-Play Model)
+To make adding tools completely plug-and-play without touching complex JavaScript, we manage tools dynamically via a central JSON configuration.
+
+In your GitHub repository, locate /data/tools.json. To edit existing tools or add a new system (e.g., Option EGO, Astro Quant, or TARA Apex Terminal), you simply edit or append to this JSON array:
+
+[
+  {
+    "id": "tradevision",
+    "name": "TradeVision",
+    "description": "Advanced charting and structural observation.",
+    "url": "https://tradevision.tradingandresearchacademy.com",
+    "required_plan": "free",
+    "status": "active"
+  },
+  {
+    "id": "swingscanner",
+    "name": "Swing Stock Scanner",
+    "description": "Real-time volatility contraction analysis (TARA Coil & TBR).",
+    "url": "https://scanner.tradingandresearchacademy.com",
+    "required_plan": "free",
+    "status": "active"
+  },
+  {
+    "id": "apex",
+    "name": "TARA APEX Terminal",
+    "description": "Option EGO & structural order flow tracking.",
+    "url": "https://apex.tradingandresearchacademy.com",
+    "required_plan": "pro",
+    "status": "active"
+  }
+]
