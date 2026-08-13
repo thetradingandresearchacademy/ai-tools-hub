@@ -4,34 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TARA APEX Central - Gateway</title>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         :root {
             --bg-base: #050A18;
-            --bg-card: rgba(15, 23, 42, 0.68);
-            --bg-card-hover: rgba(23, 32, 54, 0.92);
+            --bg-deep: #030712;
+            --bg-card: rgba(12, 20, 38, 0.78);
+            --bg-card-hover: rgba(20, 31, 54, 0.94);
 
-            --border-card: rgba(212, 175, 55, 0.22);
-            --border-hover: #FFD700;
+            --border-card: rgba(212, 175, 55, 0.20);
+            --border-hover: rgba(255, 215, 0, 0.85);
 
             --gold-primary: #FFD700;
             --gold-accent: #D4AF37;
+            --gold-soft: rgba(255, 215, 0, 0.12);
 
             --text-primary: #F8FAFC;
             --text-secondary: #A7B3C7;
+            --text-muted: #71809A;
+
+            --blue-glow: rgba(38, 126, 255, 0.14);
         }
 
         * {
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
+            margin: 0;
+            min-height: 100vh;
+
             background:
                 radial-gradient(
-                    circle at 50% -20%,
-                    rgba(212, 175, 55, 0.055),
-                    transparent 42%
+                    ellipse 70% 45% at 50% -10%,
+                    rgba(212, 175, 55, 0.075),
+                    transparent 65%
+                ),
+                radial-gradient(
+                    ellipse 45% 35% at 95% 25%,
+                    rgba(30, 110, 255, 0.055),
+                    transparent 70%
                 ),
                 var(--bg-base);
 
@@ -45,24 +63,22 @@
                 Roboto,
                 sans-serif;
 
-            padding: 28px 40px;
-            margin: 0;
-            min-height: 100vh;
+            padding: 28px 40px 35px;
         }
 
-        /* =========================
+        /* =====================================================
            HEADER
-        ========================= */
+        ===================================================== */
 
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
 
-            border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+            padding-bottom: 19px;
+            margin-bottom: 25px;
 
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.24);
         }
 
         .header-brand {
@@ -77,13 +93,13 @@
             border-radius: 7px;
 
             filter:
-                drop-shadow(0 2px 8px rgba(255, 215, 0, 0.25));
+                drop-shadow(0 3px 9px rgba(255, 215, 0, 0.24));
         }
 
         h1 {
-            color: var(--gold-primary);
-
             margin: 0;
+
+            color: var(--gold-primary);
 
             font-size: 1.65rem;
             font-weight: 700;
@@ -94,23 +110,20 @@
         .logout-btn {
             padding: 9px 20px;
 
-            background: rgba(255, 215, 0, 0.045);
-
             color: var(--gold-primary);
+
+            background: rgba(255, 215, 0, 0.035);
 
             border: 1px solid var(--gold-accent);
             border-radius: 7px;
 
-            font-weight: 600;
             font-size: 0.88rem;
+            font-weight: 600;
 
             cursor: pointer;
 
             transition:
-                background 0.25s ease,
-                color 0.25s ease,
-                box-shadow 0.25s ease,
-                transform 0.2s ease;
+                all 0.25s ease;
         }
 
         .logout-btn:hover {
@@ -118,57 +131,226 @@
             color: var(--bg-base);
 
             box-shadow:
-                0 0 14px rgba(255, 215, 0, 0.28);
+                0 0 15px rgba(255, 215, 0, 0.30);
 
             transform: translateY(-1px);
         }
 
-        /* =========================
-           SECTION TITLE
-        ========================= */
 
-        h2 {
-            color: var(--gold-accent);
+        /* =====================================================
+           HERO COMMAND CENTER
+        ===================================================== */
 
-            margin: 0 0 22px 0;
+        .hero {
+            position: relative;
+
+            min-height: 235px;
+
+            margin-bottom: 27px;
+
+            overflow: hidden;
+
+            border:
+                1px solid rgba(212, 175, 55, 0.24);
+
+            border-radius: 16px;
+
+            background:
+                linear-gradient(
+                    100deg,
+                    rgba(5, 10, 24, 0.98) 0%,
+                    rgba(5, 10, 24, 0.91) 45%,
+                    rgba(5, 10, 24, 0.64) 100%
+                );
+
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.025);
+        }
+
+        .hero::before {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(5, 10, 24, 0.95) 0%,
+                    rgba(5, 10, 24, 0.75) 42%,
+                    rgba(5, 10, 24, 0.18) 100%
+                );
+
+            z-index: 1;
+        }
+
+        .hero-image {
+            position: absolute;
+
+            right: 0;
+            top: 0;
+
+            width: 62%;
+            height: 100%;
+
+            object-fit: cover;
+
+            opacity: 0.62;
+
+            filter:
+                saturate(0.85)
+                contrast(1.08);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+
+            max-width: 650px;
+
+            padding: 31px 38px;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-bottom: 12px;
+
+            color: var(--gold-primary);
+
+            font-size: 0.72rem;
+            font-weight: 700;
+
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+        }
+
+        .hero-dot {
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--gold-primary);
+
+            box-shadow:
+                0 0 10px rgba(255, 215, 0, 0.75);
+        }
+
+        .hero h2 {
+            margin: 0 0 10px;
+
+            color: #FFFFFF;
+
+            text-align: left;
+            text-transform: none;
+
+            font-size: clamp(1.75rem, 3vw, 2.55rem);
+            font-weight: 750;
+
+            line-height: 1.12;
+
+            letter-spacing: -0.6px;
+        }
+
+        .hero h2 span {
+            color: var(--gold-primary);
+
+            text-shadow:
+                0 0 25px rgba(255, 215, 0, 0.14);
+        }
+
+        .hero-description {
+            max-width: 540px;
+
+            margin: 0 0 22px;
+
+            color: #AAB7CA;
+
+            font-size: 0.98rem;
+            line-height: 1.55;
+        }
+
+        .hero-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .hero-pill {
+            padding: 6px 11px;
+
+            color: #C9D3E2;
+
+            background:
+                rgba(255, 255, 255, 0.035);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.09);
+
+            border-radius: 999px;
+
+            font-size: 0.72rem;
+            font-weight: 600;
+
+            letter-spacing: 0.35px;
+        }
+
+        .hero-pill strong {
+            color: var(--gold-primary);
+        }
+
+
+        /* =====================================================
+           MASTER SECTION TITLE
+        ===================================================== */
+
+        .universe-title {
+            margin: 0 0 20px;
 
             text-align: center;
 
-            font-size: 1.22rem;
+            color: var(--gold-accent);
+
+            font-size: 1.23rem;
             font-weight: 650;
 
             text-transform: uppercase;
-            letter-spacing: 1.35px;
+            letter-spacing: 1.45px;
 
             text-shadow:
-                0 0 18px rgba(212, 175, 55, 0.08);
+                0 0 18px rgba(212, 175, 55, 0.09);
         }
 
-        /* =========================
-           VIEWPORT
-        ========================= */
+
+        /* =====================================================
+           PRODUCT VIEWPORT
+        ===================================================== */
 
         .viewport-container {
-            max-height: calc(3 * 175px + 2 * 16px);
+            max-height:
+                calc(3 * 175px + 2 * 16px);
 
             overflow-y: auto;
 
-            padding: 2px 8px 4px 2px;
+            padding:
+                2px 8px 5px 2px;
         }
-
-        /* Custom Scrollbar */
 
         .viewport-container::-webkit-scrollbar {
             width: 6px;
         }
 
         .viewport-container::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255, 255, 255, 0.018);
             border-radius: 4px;
         }
 
         .viewport-container::-webkit-scrollbar-thumb {
-            background: rgba(212, 175, 55, 0.3);
+            background: rgba(212, 175, 55, 0.30);
             border-radius: 4px;
         }
 
@@ -176,9 +358,10 @@
             background: var(--gold-primary);
         }
 
-        /* =========================
-           GRID
-        ========================= */
+
+        /* =====================================================
+           PRODUCT GRID
+        ===================================================== */
 
         .grid {
             display: grid;
@@ -191,7 +374,8 @@
 
         @media (max-width: 1024px) {
             .grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
             }
         }
 
@@ -199,126 +383,219 @@
             .grid {
                 grid-template-columns: 1fr;
             }
-
-            body {
-                padding: 22px 18px;
-            }
-
-            header {
-                margin-bottom: 25px;
-            }
-
-            h1 {
-                font-size: 1.35rem;
-            }
-
-            h2 {
-                font-size: 1.05rem;
-                letter-spacing: 1px;
-            }
         }
 
-        /* =========================
+
+        /* =====================================================
            PRODUCT CARDS
-        ========================= */
+        ===================================================== */
 
         .card {
             position: relative;
 
-            background:
-                linear-gradient(
-                    145deg,
-                    rgba(20, 29, 50, 0.72),
-                    rgba(10, 17, 34, 0.72)
-                );
+            height: 175px;
 
-            border: 1px solid var(--border-card);
-
-            padding: 20px;
-
-            border-radius: 11px;
-
-            text-align: center;
-
-            transition:
-                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-                border-color 0.25s ease,
-                background 0.25s ease,
-                box-shadow 0.25s ease;
+            padding: 13px 15px 14px;
 
             display: flex;
             flex-direction: column;
             justify-content: space-between;
 
-            height: 175px;
+            overflow: hidden;
+
+            text-align: center;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(18, 28, 48, 0.82),
+                    rgba(8, 15, 30, 0.82)
+                );
+
+            border:
+                1px solid var(--border-card);
+
+            border-radius: 12px;
 
             backdrop-filter: blur(10px);
+
+            box-shadow:
+                0 8px 20px rgba(0, 0, 0, 0.13);
+
+            transition:
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background 0.25s ease;
+        }
+
+        .card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 120px;
+            height: 120px;
+
+            right: -65px;
+            bottom: -70px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255, 215, 0, 0.07),
+                    transparent 68%
+                );
+
+            pointer-events: none;
         }
 
         .card:hover {
+            transform: translateY(-4px);
+
             border-color: var(--border-hover);
 
-            background: var(--bg-card-hover);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(22, 34, 58, 0.95),
+                    rgba(9, 17, 34, 0.95)
+                );
 
             box-shadow:
-                0 8px 24px rgba(5, 10, 24, 0.65),
-                0 0 18px rgba(255, 215, 0, 0.13);
-
-            transform: translateY(-3px);
+                0 14px 30px rgba(0, 0, 0, 0.32),
+                0 0 20px rgba(255, 215, 0, 0.10);
         }
 
-        /* =========================
+
+        /* =====================================================
+           MICRO IMAGE
+        ===================================================== */
+
+        .card-image {
+            position: relative;
+
+            width: 100%;
+            height: 58px;
+
+            overflow: hidden;
+
+            border-radius: 8px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.07);
+
+            background: #08101F;
+        }
+
+        .card-image img {
+            width: 100%;
+            height: 100%;
+
+            display: block;
+
+            object-fit: cover;
+
+            opacity: 0.76;
+
+            filter:
+                saturate(0.78)
+                contrast(1.08);
+
+            transition:
+                transform 0.4s ease,
+                opacity 0.4s ease,
+                filter 0.4s ease;
+        }
+
+        .card:hover .card-image img {
+            transform: scale(1.06);
+
+            opacity: 0.94;
+
+            filter:
+                saturate(1)
+                contrast(1.08);
+        }
+
+        .card-image::after {
+            content: "";
+
+            position: absolute;
+            inset: 0;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    rgba(5, 10, 24, 0.38),
+                    rgba(5, 10, 24, 0.02),
+                    rgba(255, 215, 0, 0.05)
+                );
+
+            pointer-events: none;
+        }
+
+
+        /* =====================================================
            CARD CONTENT
-        ========================= */
+        ===================================================== */
 
         .card-content {
             display: flex;
             flex-direction: column;
             align-items: center;
+
+            padding-top: 1px;
         }
 
         .card-content h3 {
+            margin: 0 0 4px;
+
             color: var(--gold-primary);
 
-            margin: 0 0 8px 0;
-
-            font-size: 1.08rem;
+            font-size: 1.03rem;
             font-weight: 650;
 
-            line-height: 1.25;
+            line-height: 1.2;
 
-            letter-spacing: 0.15px;
+            letter-spacing: 0.1px;
         }
 
         .card-content p {
-            color: var(--text-secondary);
-
-            font-size: 1rem;
-            font-weight: 450;
-
-            line-height: 1.4;
-
             margin: 0;
 
-            max-width: 95%;
+            max-width: 96%;
+
+            color: var(--text-secondary);
+
+            font-size: 0.94rem;
+            font-weight: 450;
+
+            line-height: 1.3;
 
             display: -webkit-box;
+
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
 
             overflow: hidden;
         }
 
-        /* =========================
+
+        /* =====================================================
            LAUNCH BUTTON
-        ========================= */
+        ===================================================== */
 
         .card a {
             display: block;
 
             width: 100%;
 
-            padding: 10px 0;
+            padding: 9px 0;
+
+            color: #050A18;
 
             background:
                 linear-gradient(
@@ -327,13 +604,11 @@
                     #D4AF37 100%
                 );
 
-            color: #050A18;
+            border-radius: 7px;
 
             text-decoration: none;
 
-            border-radius: 7px;
-
-            font-size: 0.88rem;
+            font-size: 0.86rem;
             font-weight: 700;
 
             letter-spacing: 0.35px;
@@ -353,17 +628,94 @@
                 );
 
             box-shadow:
-                0 3px 12px rgba(255, 215, 0, 0.32);
+                0 4px 13px rgba(255, 215, 0, 0.30);
 
             transform: translateY(-1px);
         }
+
+
+        /* =====================================================
+           RESPONSIVE HERO
+        ===================================================== */
+
+        @media (max-width: 760px) {
+
+            body {
+                padding: 20px 17px 28px;
+            }
+
+            header {
+                margin-bottom: 22px;
+            }
+
+            .header-logo {
+                width: 44px;
+            }
+
+            h1 {
+                font-size: 1.35rem;
+            }
+
+            .logout-btn {
+                padding: 8px 13px;
+                font-size: 0.78rem;
+            }
+
+            .hero {
+                min-height: 300px;
+            }
+
+            .hero-image {
+                width: 100%;
+                height: 48%;
+                top: auto;
+                bottom: 0;
+
+                opacity: 0.30;
+            }
+
+            .hero::before {
+                background:
+                    linear-gradient(
+                        180deg,
+                        rgba(5, 10, 24, 0.97) 0%,
+                        rgba(5, 10, 24, 0.88) 52%,
+                        rgba(5, 10, 24, 0.45) 100%
+                    );
+            }
+
+            .hero-content {
+                padding: 27px 23px;
+            }
+
+            .hero h2 {
+                font-size: 1.85rem;
+            }
+
+            .hero-description {
+                font-size: 0.91rem;
+            }
+
+            .universe-title {
+                font-size: 1.04rem;
+                letter-spacing: 1px;
+            }
+        }
+
     </style>
 </head>
 
+
 <body>
 
+    <!-- =====================================================
+         EXISTING HEADER — FUNCTIONALITY UNCHANGED
+    ====================================================== -->
+
     <header>
+
         <div class="header-brand">
+
             <img
                 src="/TARA-LOGO-PNG.png"
                 alt="TARA Logo"
@@ -371,26 +723,115 @@
             >
 
             <h1>TARA APEX Central</h1>
+
         </div>
 
-        <button class="logout-btn" id="logout-btn">
+        <button
+            class="logout-btn"
+            id="logout-btn"
+        >
             Terminate Session
         </button>
+
     </header>
 
 
-    <h2>TRADING UNIVERSE- TARA Ai ACADEMY</h2>
+    <!-- =====================================================
+         NEW HERO
+    ====================================================== -->
 
+    <section class="hero">
+
+        <img
+            class="hero-image"
+            src="https://images.unsplash.com/photo-1642790106117-e829e14a795f?auto=format&fit=crop&w=1600&q=82"
+            alt=""
+        >
+
+        <div class="hero-content">
+
+            <div class="hero-eyebrow">
+                <span class="hero-dot"></span>
+                TARA AI ACADEMY • MARKET INTELLIGENCE SUITE
+            </div>
+
+            <h2>
+                One Central Desk.
+                <br>
+                <span>Every Market Edge.</span>
+            </h2>
+
+            <p class="hero-description">
+                Your unified gateway to TARA's growing ecosystem of
+                market intelligence, scanning, simulation, analysis
+                and real-time trading systems.
+            </p>
+
+            <div class="hero-pills">
+
+                <div class="hero-pill">
+                    <strong>07</strong>&nbsp; Market Systems
+                </div>
+
+                <div class="hero-pill">
+                    <strong>REAL-TIME</strong>&nbsp; Intelligence
+                </div>
+
+                <div class="hero-pill">
+                    <strong>ONE</strong>&nbsp; Central Access
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         ORIGINAL PAGE HEADING — PRESERVED EXACTLY
+    ====================================================== -->
+
+    <h2 class="universe-title">
+        TRADING UNIVERSE- TARA Ai ACADEMY
+    </h2>
+
+
+    <!-- =====================================================
+         PRODUCT UNIVERSE
+    ====================================================== -->
 
     <div class="viewport-container">
 
         <div class="grid" id="tools-grid">
 
-            <!-- System 1 -->
+
+            <!-- =================================================
+                 SYSTEM 1 — PULSE
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=700&q=78"
+                        alt="Intraday market intelligence"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>PULSE- THE INTRADAY HUB</h3>
-                    <p>Advanced Real-Time FnO Heartbeat</p>
+
+                    <h3>
+                        PULSE- THE INTRADAY HUB
+                    </h3>
+
+                    <p>
+                        Advanced Real-Time FnO Heartbeat
+                    </p>
+
                 </div>
 
                 <a
@@ -399,14 +840,36 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
 
 
-            <!-- System 2 -->
+            <!-- =================================================
+                 SYSTEM 2 — TRADEVISION
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=700&q=78"
+                        alt="Trading chart analysis"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>TradeVision</h3>
-                    <p>Advanced Charting &amp; Trading Simulator</p>
+
+                    <h3>
+                        TradeVision
+                    </h3>
+
+                    <p>
+                        Advanced Charting &amp; Trading Simulator
+                    </p>
+
                 </div>
 
                 <a
@@ -415,14 +878,36 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
 
 
-            <!-- System 3 -->
+            <!-- =================================================
+                 SYSTEM 3 — SWING SCANNER
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1579225663317-c0251b4369bc?auto=format&fit=crop&w=700&q=78"
+                        alt="Market chart scanning"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>Swing Stock Scanner</h3>
-                    <p>Volatility Contraction Analysis</p>
+
+                    <h3>
+                        Swing Stock Scanner
+                    </h3>
+
+                    <p>
+                        Volatility Contraction Analysis
+                    </p>
+
                 </div>
 
                 <a
@@ -431,14 +916,36 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
 
 
-            <!-- System 4 -->
+            <!-- =================================================
+                 SYSTEM 4 — APEX TERMINAL
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1640661060277-7c6d52cbf823?auto=format&fit=crop&w=700&q=78"
+                        alt="Professional trading terminal"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>TARA APEX Terminal</h3>
-                    <p>Your Complete Stock Analysis Platform</p>
+
+                    <h3>
+                        TARA APEX Terminal
+                    </h3>
+
+                    <p>
+                        Your Complete Stock Analysis Platform
+                    </p>
+
                 </div>
 
                 <a
@@ -447,14 +954,36 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
 
 
-            <!-- System 5 -->
+            <!-- =================================================
+                 SYSTEM 5 — IPO LENS
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1667040632956-3521d4091eda?auto=format&fit=crop&w=700&q=78"
+                        alt="Investment opportunity"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>IPO LENS</h3>
-                    <p>Curated IPO picks designed for trading &amp; investing</p>
+
+                    <h3>
+                        IPO LENS
+                    </h3>
+
+                    <p>
+                        Curated IPO picks designed for trading &amp; investing
+                    </p>
+
                 </div>
 
                 <a
@@ -463,14 +992,36 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
 
 
-            <!-- System 6 -->
+            <!-- =================================================
+                 SYSTEM 6 — ETF RADAR
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=700&q=78"
+                        alt="Investment analytics dashboard"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>ETF RADAR</h3>
-                    <p>Special trade &amp; grow rich ETFs</p>
+
+                    <h3>
+                        ETF RADAR
+                    </h3>
+
+                    <p>
+                        Special trade &amp; grow rich ETFs
+                    </p>
+
                 </div>
 
                 <a
@@ -479,14 +1030,36 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
 
 
-            <!-- System 7 -->
+            <!-- =================================================
+                 SYSTEM 7 — COMMODITY & FOREX
+            ================================================== -->
+
             <div class="card">
+
+                <div class="card-image">
+
+                    <img
+                        src="https://images.unsplash.com/photo-1644363832005-6f4e0a1217c0?auto=format&fit=crop&w=700&q=78"
+                        alt="Global commodities and currency markets"
+                        loading="lazy"
+                    >
+
+                </div>
+
                 <div class="card-content">
-                    <h3>COMMODITY &amp; FOREX RADAR</h3>
-                    <p>For Commex &amp; Crypto lovers</p>
+
+                    <h3>
+                        COMMODITY &amp; FOREX RADAR
+                    </h3>
+
+                    <p>
+                        For Commex &amp; Crypto lovers
+                    </p>
+
                 </div>
 
                 <a
@@ -495,14 +1068,21 @@
                 >
                     Launch Tool
                 </a>
+
             </div>
+
 
         </div>
 
     </div>
 
 
+    <!-- =====================================================
+         EXISTING AUTHENTICATION — UNCHANGED
+    ====================================================== -->
+
     <script>
+
         document.addEventListener('DOMContentLoaded', async () => {
 
             const SUPABASE_URL =
@@ -524,8 +1104,11 @@
 
 
             if (!session) {
+
                 window.location.href = "login.html";
+
                 return;
+
             }
 
 
@@ -536,9 +1119,11 @@
                     await supabase.auth.signOut();
 
                     window.location.href = "login.html";
+
                 });
 
         });
+
     </script>
 
 </body>
