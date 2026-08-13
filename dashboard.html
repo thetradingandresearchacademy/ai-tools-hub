@@ -21,6 +21,17 @@
             padding-bottom: 20px; 
             margin-bottom: 30px; 
         }
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header-logo {
+            width: 50px;
+            height: auto;
+            border-radius: 4px;
+            filter: drop-shadow(0 2px 6px rgba(255, 215, 0, 0.3));
+        }
         h1, h2 { color: #FFD700; margin: 0; }
         .logout-btn { 
             padding: 10px 20px; 
@@ -73,7 +84,10 @@
 </head>
 <body>
     <header>
-        <h1>TARA APEX Central</h1>
+        <div class="header-brand">
+            <img src="/TARA-LOGO-PNG.png" alt="TARA Logo" class="header-logo">
+            <h1>TARA APEX Central</h1>
+        </div>
         <button class="logout-btn" id="logout-btn">Terminate Session</button>
     </header>
 
@@ -82,26 +96,17 @@
         <!-- System 1 -->
         <div class="card">
             <div>
-                <h3>PULSE- THE INTRADAY HUB</h3>
-                <p>Real-Time FnO Heartbeat.</p>
-            </div>
-            <a href="https://pulse.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
-        </div>
-
-        <!-- System 2.1 -->
-        <div class="card">
-            <div>
                 <h3>TradeVision</h3>
-                <p>Advanced Charting & Trading Simulator.</p>
+                <p>Advanced charting, structural observation, and TBR tracking.</p>
             </div>
-            <a href="https://app.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
+            <a href="https://tradevision.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
         </div>
 
         <!-- System 2 -->
         <div class="card">
             <div>
                 <h3>Swing Stock Scanner</h3>
-                <p>Volatility Contraction Analysis</p>
+                <p>Real-time volatility contraction analysis (TARA Coil & VCP).</p>
             </div>
             <a href="https://scanner.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
         </div>
@@ -110,7 +115,7 @@
         <div class="card">
             <div>
                 <h3>TARA APEX Terminal</h3>
-                <p>Your Complete Stock Analysis Platform.</p>
+                <p>Option EGO & structural order flow tracking.</p>
             </div>
             <a href="https://apex.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
         </div>
@@ -123,14 +128,12 @@
             
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // 1. Enforce Authentication Guard
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
                 window.location.href = "login.html";
                 return;
             }
 
-            // 2. Handle Session Termination
             document.getElementById('logout-btn').addEventListener('click', async () => {
                 await supabase.auth.signOut();
                 window.location.href = "login.html";
