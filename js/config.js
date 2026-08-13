@@ -1,6 +1,6 @@
 // js/config.js
 const TARA_CONFIG = {
-    // Replace these with your NEW Supabase project details
+    // Supabase project details
     SUPABASE_URL: "https://dlqttnqlnzcprqxuovte.supabase.co",
     SUPABASE_ANON_KEY: "sb_publishable_nBOtx-lTx94ts2IsdSRQiw_1ktIWKcg",
     
