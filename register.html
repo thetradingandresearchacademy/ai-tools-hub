@@ -13,6 +13,7 @@
         input::placeholder { color: rgba(255, 215, 0, 0.5); }
         button { width: 100%; padding: 12px; background: #FFD700; color: #050A18; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: background 0.3s; }
         button:hover { background: #e6c200; }
+        button:disabled { background: #887a24; cursor: not-allowed; }
         .links { text-align: center; margin-top: 15px; font-size: 0.9em; }
         a { color: #FFD700; text-decoration: none; }
         a:hover { text-decoration: underline; }
@@ -27,7 +28,7 @@
         <form id="register-form">
             <input type="email" id="email" placeholder="Email Address" required autocomplete="email">
             <input type="password" id="password" placeholder="Create Password" required autocomplete="new-password">
-            <button type="submit">Establish Account</button>
+            <button type="submit" id="submit-btn">Establish Account</button>
         </form>
         <div id="msg"></div>
         <div class="links">
@@ -35,59 +36,59 @@
         </div>
     </div>
 
-    <!-- External Configuration File -->
-    <script src="/js/config.js"></script>
-    
     <script>
-        const supabase = window.supabase.createClient(
-            TARA_CONFIG.SUPABASE_URL, 
-            TARA_CONFIG.SUPABASE_ANON_KEY
-        );
-
-        document.getElementById('register-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Hardcoded configuration eliminates network race conditions
+            const SUPABASE_URL = "https://dlqttnqlnzcprqxuovte.supabase.co"; 
+            const SUPABASE_ANON_KEY = "sb_publishable_nBOtx-lTx94ts2IsdSRQiw_1ktIWKcg"; 
+            
+            const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            const form = document.getElementById('register-form');
+            const btn = document.getElementById('submit-btn');
             const msgDiv = document.getElementById('msg');
-            
-            btn.textContent = "Processing...";
-            btn.disabled = true;
-            msgDiv.className = "";
-            msgDiv.textContent = "";
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
 
-            try {
-                const { data, error } = await supabase.auth.signUp({ 
-                    email, 
-                    password,
-                    options: {
-                        emailRedirectTo: 'https://login.tradingandresearchacademy.com/login.html'
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                btn.textContent = "Processing...";
+                btn.disabled = true;
+                msgDiv.className = "";
+                msgDiv.textContent = "";
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                try {
+                    const { data, error } = await supabase.auth.signUp({ 
+                        email, 
+                        password,
+                        options: {
+                            emailRedirectTo: 'https://login.tradingandresearchacademy.com/login.html'
+                        }
+                    });
+
+                    if (error) throw error;
+
+                    if (data.user && data.user.identities && data.user.identities.length === 0) {
+                        msgDiv.className = "error";
+                        msgDiv.textContent = "An account with this email already exists.";
+                    } else if (data.session === null) {
+                        msgDiv.className = "success";
+                        msgDiv.textContent = "Registration successful! A verification email has been sent. Please check your inbox and verify before logging in.";
+                        form.reset();
+                    } else {
+                        msgDiv.className = "success";
+                        msgDiv.textContent = "Account created and verified! Redirecting to login...";
+                        setTimeout(() => window.location.href = "login.html", 2000);
                     }
-                });
-
-                if (error) throw error;
-
-                // Check if user needs email verification
-                if (data.user && data.user.identities && data.user.identities.length === 0) {
+                } catch (error) {
                     msgDiv.className = "error";
-                    msgDiv.textContent = "An account with this email already exists.";
-                } else if (data.session === null) {
-                    msgDiv.className = "success";
-                    msgDiv.textContent = "Registration successful! A verification email has been sent. Please check your inbox and verify before logging in.";
-                    e.target.reset();
-                } else {
-                    msgDiv.className = "success";
-                    msgDiv.textContent = "Account created and verified! Redirecting to login...";
-                    setTimeout(() => window.location.href = "login.html", 2000);
+                    msgDiv.textContent = error.message || "Registration failed.";
+                } finally {
+                    btn.textContent = "Establish Account";
+                    btn.disabled = false;
                 }
-            } catch (error) {
-                msgDiv.className = "error";
-                msgDiv.textContent = error.message || "Registration failed.";
-            } finally {
-                btn.textContent = "Establish Account";
-                btn.disabled = false;
-            }
+            });
         });
     </script>
 </body>
