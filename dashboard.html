@@ -6,17 +6,68 @@
     <title>TARA APEX Central - Gateway</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        body { background-color: #050A18; color: #ffffff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; margin: 0; }
-        header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #FFD700; padding-bottom: 20px; margin-bottom: 30px; }
+        body { 
+            background-color: #050A18; 
+            color: #ffffff; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            padding: 40px; 
+            margin: 0; 
+        }
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid #FFD700; 
+            padding-bottom: 20px; 
+            margin-bottom: 30px; 
+        }
         h1, h2 { color: #FFD700; margin: 0; }
-        .logout-btn { padding: 10px 20px; background: transparent; color: #FFD700; border: 1px solid #FFD700; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .logout-btn { 
+            padding: 10px 20px; 
+            background: transparent; 
+            color: #FFD700; 
+            border: 1px solid #FFD700; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+        }
         .logout-btn:hover { background: #FFD700; color: #050A18; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 20px; }
-        .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 215, 0, 0.3); padding: 25px; border-radius: 8px; text-align: center; transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between; }
-        .card:hover { border-color: #FFD700; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2); transform: translateY(-2px); }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+            gap: 25px; 
+            margin-top: 20px; 
+        }
+        .card { 
+            background: rgba(255, 255, 255, 0.05); 
+            border: 1px solid rgba(255, 215, 0, 0.3); 
+            padding: 25px; 
+            border-radius: 8px; 
+            text-align: center; 
+            transition: 0.3s; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+        }
+        .card:hover { 
+            border-color: #FFD700; 
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2); 
+            transform: translateY(-2px); 
+        }
         .card h3 { color: #FFD700; margin-top: 0; }
         .card p { color: #cccccc; font-size: 0.95em; line-height: 1.4; }
-        .card a { display: inline-block; margin-top: 15px; padding: 12px 20px; background: #FFD700; color: #050A18; text-decoration: none; border-radius: 4px; font-weight: bold; transition: 0.3s; }
+        .card a { 
+            display: inline-block; 
+            margin-top: 15px; 
+            padding: 12px 20px; 
+            background: #FFD700; 
+            color: #050A18; 
+            text-decoration: none; 
+            border-radius: 4px; 
+            font-weight: bold; 
+            transition: 0.3s; 
+        }
         .card a:hover { background: #e6c200; }
     </style>
 </head>
@@ -26,9 +77,34 @@
         <button class="logout-btn" id="logout-btn">Terminate Session</button>
     </header>
 
-    <h2>Active Tools & Systems</h2>
+    <h2>Active Systems & Scanners</h2>
     <div class="grid" id="tools-grid">
-        <p style="color: #FFD700;">Loading authorized systems...</p>
+        <!-- System 1 -->
+        <div class="card">
+            <div>
+                <h3>TradeVision</h3>
+                <p>Advanced charting, structural observation, and TBR tracking.</p>
+            </div>
+            <a href="https://tradevision.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
+        </div>
+
+        <!-- System 2 -->
+        <div class="card">
+            <div>
+                <h3>Swing Stock Scanner</h3>
+                <p>Real-time volatility contraction analysis (TARA Coil & VCP).</p>
+            </div>
+            <a href="https://scanner.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
+        </div>
+
+        <!-- System 3 -->
+        <div class="card">
+            <div>
+                <h3>TARA APEX Terminal</h3>
+                <p>Option EGO & structural order flow tracking.</p>
+            </div>
+            <a href="https://apex.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
+        </div>
     </div>
 
     <script>
@@ -38,44 +114,18 @@
             
             const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            // 1. Session Protection Check
+            // 1. Enforce Authentication Guard
             const { data: { session } } = await supabase.auth.getSession();
             if (!session) {
                 window.location.href = "login.html";
                 return;
             }
 
-            // Logout handler
+            // 2. Handle Session Termination
             document.getElementById('logout-btn').addEventListener('click', async () => {
                 await supabase.auth.signOut();
                 window.location.href = "login.html";
             });
-
-            // 2. Fetch Tools Dynamically from /data/tools.json
-            try {
-                const res = await fetch('/data/tools.json');
-                const tools = await res.json();
-                
-                const grid = document.getElementById('tools-grid');
-                grid.innerHTML = '';
-
-                tools.forEach(tool => {
-                    if (tool.status === 'active') {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.innerHTML = `
-                            <div>
-                                <h3>${tool.name}</h3>
-                                <p>${tool.description}</p>
-                            </div>
-                            <a href="${tool.url}" target="_blank">Launch Tool</a>
-                        `;
-                        grid.appendChild(card);
-                    }
-                });
-            } catch (err) {
-                document.getElementById('tools-grid').innerHTML = '<p style="color:#ff4d4d;">Failed to load systems list.</p>';
-            }
         });
     </script>
 </body>
