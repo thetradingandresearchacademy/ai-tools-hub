@@ -1,3 +1,18 @@
+How to Add/Edit Systems in the Future
+When you add a new tool down the road, simply edit dashboard.html directly by duplicating one of the <div class="card"> blocks inside the grid:
+
+HTML
+<div class="card">
+    <div>
+        <h3>Your Tool Name</h3>
+        <p>Short description of the strategy or scanner.</p>
+    </div>
+    <a href="https://yourtool.tradingandresearchacademy.com" target="_blank">Launch Tool</a>
+</div>
+Commit this file to GitHub, refresh your browser, and all your tools will render instantly.
+=========================================================================
+
+
 Part 1: How to Add, Edit, or Manage Tools (The Plug-and-Play Model)
 To make adding tools completely plug-and-play without touching complex JavaScript, we manage tools dynamically via a central JSON configuration.
 
